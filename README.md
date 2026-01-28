@@ -18,3 +18,42 @@ This project demonstrates a complete **Cloud-Native** workflow: developing a Go 
 ### 1. Build the Image
 ```bash
 docker build -t my-go-app:v1 .
+
+### 2. Import to K3s (If using K3s)
+
+Since K3s uses containerd, we import the local image directly to avoid pushing to a registry during development.
+
+Bash
+docker save my-go-app:v1 -o my-go-app.tar
+sudo k3s ctr images import my-go-app.tar
+
+### 3. Deploy to Cluster
+
+Bash
+kubectl apply -f go-deployment.yaml
+kubectl apply -f go-nodeport.yaml
+
+### 4. Verify Load Balancing
+
+The application prints the Pod Name. Hitting the endpoint multiple times demonstrates Round-Robin load balancing across replicas.
+
+Bash
+curl http://localhost:32667
+# Output: "Hello Network Engineer! I am running on Pod: go-app-xyz"
+📂 Project Structure
+main.go: The Go source code.
+
+Dockerfile: Instructions to package the app.
+
+go-deployment.yaml: K8s Manifest for the Deployment (3 Replicas).
+
+go-nodeport.yaml: K8s Manifest for the Service (Exposing Port 32667).
+
+
+### Commit and Push
+Now, send this documentation to your GitHub page.
+
+```bash
+git add README.md
+git commit -m "Add documentation"
+git push
