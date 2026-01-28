@@ -1,0 +1,6 @@
+# Ignore binaries and tarballs
+server
+*.tar
+
+# Ignore system files
+.DS_Store
