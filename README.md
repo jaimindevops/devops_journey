@@ -15,7 +15,8 @@ This project demonstrates a complete **Cloud-Native** workflow: developing a Go 
 
 ## 🚀 How to Run
 
-### 1. Build the Image
+###1. Build the Image
+
 ```bash
 docker build -t my-go-app:v1 .
 
