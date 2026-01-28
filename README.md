@@ -50,11 +50,3 @@ go-deployment.yaml: K8s Manifest for the Deployment (3 Replicas).
 
 go-nodeport.yaml: K8s Manifest for the Service (Exposing Port 32667).
 
-
-### Commit and Push
-Now, send this documentation to your GitHub page.
-
-```bash
-git add README.md
-git commit -m "Add documentation"
-git push
