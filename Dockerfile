@@ -1,20 +1,23 @@
-# Start from a small, secure Linux version with Go installed
+# Start from a small, secure Linux version
 FROM golang:1.21-alpine
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy your source code into the container
+# Copy the source code first
 COPY main.go .
 
-# Initialize a Go module (required for modern Go)
+# 1. Initialize the module INSIDE the container
 RUN go mod init my-go-app
 
-# Build the application
+# 2. Download the Redis library INSIDE the container
+RUN go get github.com/redis/go-redis/v9
+
+# 3. Build the application
 RUN go build -o server main.go
 
-# Tell Docker this app listens on port 8080
+# Expose the port
 EXPOSE 8080
 
-# The command to run when the container starts
+# Run the server
 CMD ["./server"]

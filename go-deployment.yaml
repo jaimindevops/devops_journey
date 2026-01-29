@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: go-app
-        image: my-go-app:v1
+        image: my-go-app:v2
         imagePullPolicy: Never   # <--- CRITICAL! Uses the local image
         ports:
         - containerPort: 8080
