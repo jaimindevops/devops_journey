@@ -1,4 +1,15 @@
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
@@ -19,6 +30,8 @@ spec:
   selector:
     matchLabels:
       app: redis
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -27,5 +40,16 @@ spec:
       containers:
       - name: redis
         image: redis:7
+        # COMMAND: Turn on data persistence
+        command: ["redis-server", "--appendonly", "yes"]
         ports:
         - containerPort: 6379
+        # MOUNT: Where inside the container to save data
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+      # VOLUME: The claim we defined at the top
+      volumes:
+      - name: redis-storage
+        persistentVolumeClaim:
+          claimName: redis-data
