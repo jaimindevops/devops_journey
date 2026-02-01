@@ -1,25 +1,26 @@
-name: Debug Secrets
-on: push
-jobs:
-  debug-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Docker Username
-        env:
-          MY_USER: ${{ secrets.DOCKER_USERNAME }}
-        run: |
-          if [ -z "$MY_USER" ]; then
-            echo "❌ ERROR: DOCKER_USERNAME is EMPTY. The Robot cannot see it."
-          else
-            echo "✅ SUCCESS: DOCKER_USERNAME is found: $MY_USER"
-          fi
+name: CI Pipeline
 
-      - name: Check Docker Password
-        env:
-          MY_PASS: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          if [ -z "$MY_PASS" ]; then
-            echo "❌ ERROR: DOCKER_PASSWORD is EMPTY. The Robot cannot see it."
-          else
-            echo "✅ SUCCESS: DOCKER_PASSWORD is found (masked)."
-          fi
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: jaiminops18/my-go-app:latest
