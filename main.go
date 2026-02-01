@@ -29,7 +29,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	hostname, _ := os.Hostname()
 	
 	// 4. Print the result
-	fmt.Fprintf(w, "Hello Network Engineer! I am running on Pod: %s\n", hostname)
+	fmt.Fprintf(w, "Hello DevOps Engineer! CI pipeline is working: %s\n", hostname)
 	fmt.Fprintf(w, "Total Visitor Count: %d\n", val)
 }
 
