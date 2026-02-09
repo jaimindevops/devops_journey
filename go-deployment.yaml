@@ -13,14 +13,7 @@ spec:
         app: go-app
     spec:
       containers:
-      # 1. Main Application
       - name: go-app
-        image: jaiminops18/go-app:v1
+        image: jaiminops18/go-app:THIS-TAG-DOES-NOT-EXIST  # <--- The Sabotage
         ports:
         - containerPort: 8080
-      
-      # 2. Sidecar: Network Monitor (The "Eyes")
-      - name: net-monitor
-        image: nicolaka/netshoot
-        command: ["/bin/sh"]
-        args: ["-c", "while true; do echo '--- Network Check ---'; date; ping -c 1 redis; sleep 10; done"]
