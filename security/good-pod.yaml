@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: good-pod
+  labels:
+    app: secure-app
+spec:
+  # 1. Cluster-Level Security Promise
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000   # Run as UID 1000 (standard user)
+    runAsGroup: 3000
+    fsGroup: 2000
+  containers:
+  - name: secure-app
+    image: jaiminops18/go-app:v2
+    ports:
+    - containerPort: 8080
+    # 2. Container-Level Security Promise
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false

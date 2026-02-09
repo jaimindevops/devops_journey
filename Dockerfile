@@ -1,23 +1,14 @@
-# Start from a small, secure Linux version
-FROM golang:1.21-alpine
-
-# Set the working directory
+# Stage 1: Build
+FROM golang:1.23-alpine AS builder
 WORKDIR /app
+COPY . .
+RUN go build -o main .
 
-# Copy the source code first
-COPY main.go .
-
-# 1. Initialize the module INSIDE the container
-RUN go mod init my-go-app
-
-# 2. Download the Redis library INSIDE the container
-RUN go get github.com/redis/go-redis/v9
-
-# 3. Build the application
-RUN go build -o server main.go
-
-# Expose the port
+# Stage 2: Run (The Secure Layer)
+FROM alpine:latest
+WORKDIR /app
+# FIX: Force update all packages to fix CVEs
+RUN apk update && apk upgrade --no-cache
+COPY --from=builder /app/main .
 EXPOSE 8080
-
-# Run the server
-CMD ["./server"]
+CMD ["./main"]
