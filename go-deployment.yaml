@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: go-app
-        image: jaiminops18/go-app:2c952588dc9da1c3faac43fd9e3d30c86a6ade17
+        image: jaiminops18/go-app:5d68169aa3805962798f30410e73896a669f4954
         ports:
         - containerPort: 8080
