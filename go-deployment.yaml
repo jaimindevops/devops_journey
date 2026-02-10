@@ -19,7 +19,7 @@ spec:
       containers:
       # 1. Main Application Container
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:2d7ff312111595cacbef84becbb02a4e2355e7d0
+        image: ghcr.io/jaimindevops/go-app:b32fc4fb6ef63e9f9de71a07d90110c187c5650b
         ports:
         - containerPort: 8080
         env:
