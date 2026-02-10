@@ -4,6 +4,7 @@ metadata:
   name: go-app
 spec:
   replicas: 1
+  revisionHistoryLimit: 3 # This cleans up the old ReplicaSet clutter
   selector:
     matchLabels:
       app: go-app
@@ -12,8 +13,24 @@ spec:
       labels:
         app: go-app
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       containers:
       - name: go-app
         image: jaiminops18/go-app:cdd4759f44bc8670db0b8a921ef1e4600bc5650c
         ports:
         - containerPort: 8080
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
