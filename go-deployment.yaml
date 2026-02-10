@@ -12,18 +12,20 @@ spec:
       labels:
         app: go-app
     spec:
+      # Pod-Level Security Context
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
       containers:
+      # 1. Main Application Container
       - name: go-app
         image: ghcr.io/jaimindevops/go-app:2d7ff312111595cacbef84becbb02a4e2355e7d0
         ports:
         - containerPort: 8080
-        env:                     # Added your Redis Env
+        env:
         - name: REDIS_URL
           value: "redis-service:6379"
-        securityContext:         # Kept your Security Fixes
+        securityContext:
           runAsNonRoot: true
           allowPrivilegeEscalation: false
           capabilities:
@@ -36,3 +38,14 @@ spec:
           limits:
             cpu: "200m"
             memory: "128Mi"
+
+      # 2. Sidecar Container (Netshoot)
+      - name: sidecar
+        image: nicolaka/netshoot
+        # Keep the container running indefinitely so you can exec into it
+        command: ["/bin/bash"]
+        args: ["-c", "while true; do sleep 30; done;"]
+        # Override security context because network tools often need root
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 0
