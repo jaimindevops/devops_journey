@@ -41,7 +41,7 @@ spec:
 
       # 2. Sidecar Container (Netshoot)
       - name: sidecar
-        image: ghcr.io/jaimindevops/go-app:ae89de0b5af149ed83bdb7a36fb67a9177221fb2
+        image: nicolaka/netshoot
         # Keep the container running indefinitely so you can exec into it
         command: ["/bin/bash"]
         args: ["-c", "while true; do sleep 30; done;"]
