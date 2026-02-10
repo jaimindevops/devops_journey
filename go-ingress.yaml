@@ -2,15 +2,23 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: go-ingress
+  annotations:
+    # 🚨 This tells Cert-Manager to wake up
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - "go-app.40.233.65.47.sslip.io"
+    secretName: go-app-tls
   rules:
-  - http:
+  - host: "go-app.40.233.65.47.sslip.io"
+    http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: go-service     # Matches your Service Name
+            name: go-service
             port:
-              number: 8080       # <--- CHANGED FROM 80 TO 8080
+              number: 8080
