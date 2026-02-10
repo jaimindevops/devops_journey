@@ -17,7 +17,7 @@ spec:
         image: ghcr.io/jaimindevops/go-app:latest
         resources:
           requests:
-            cpu: "100m"     # 🚨 THIS FIXES THE HPA ERROR
+            cpu: "100m"     # 🚨 THIS FIXES THE HPA LOG ERROR
             memory: "128Mi"
           limits:
             cpu: "500m"
