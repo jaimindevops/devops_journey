@@ -12,14 +12,13 @@ spec:
       labels:
         app: go-app
     spec:
-      # Pod-Level Security Context
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
       containers:
-      # 1. Main Application Container
+      # 1. Main Application
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:b32fc4fb6ef63e9f9de71a07d90110c187c5650b
+        image: ghcr.io/jaimindevops/go-app:e440513
         ports:
         - containerPort: 8080
         env:
@@ -39,13 +38,10 @@ spec:
             cpu: "200m"
             memory: "128Mi"
 
-      # 2. Sidecar Container (Netshoot)
+      # 2. Sidecar (CORRECT IMAGE: Alpine)
       - name: sidecar
-        image: nicolaka/netshoot
-        # Keep the container running indefinitely so you can exec into it
-        command: ["/bin/bash"]
-        args: ["-c", "while true; do sleep 30; done;"]
-        # Override security context because network tools often need root
+        image: public.ecr.aws/docker/library/alpine:latest
+        command: ["/bin/sh", "-c", "sleep 3600"]
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
