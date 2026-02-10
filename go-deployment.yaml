@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:0a59dd9e9f0346a241c97aa71ffd169159da9daa
+        image: ghcr.io/jaimindevops/go-app:b0799eb68e2df47478e950d81fe8b38168ade136
         resources:
           requests:
             cpu: "100m"     # 🚨 THIS FIXES THE HPA LOG ERROR
