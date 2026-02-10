@@ -19,7 +19,7 @@ spec:
       containers:
       # 1. Main Application Container
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:d1b6a3d40ae17f3631043d52013ee1aef89a1acf
+        image: ghcr.io/jaimindevops/go-app:aac1f3895c69bb1259af6ef607c35f0f8e84ad36
         ports:
         - containerPort: 8080
         env:
@@ -41,7 +41,7 @@ spec:
 
       # 2. Sidecar Container (Netshoot)
       - name: sidecar
-        image: ghcr.io/jaimindevops/go-app:d1b6a3d40ae17f3631043d52013ee1aef89a1acf
+        image: ghcr.io/jaimindevops/go-app:aac1f3895c69bb1259af6ef607c35f0f8e84ad36
         # Keep the container running indefinitely so you can exec into it
         command: ["/bin/bash"]
         args: ["-c", "while true; do sleep 30; done;"]
