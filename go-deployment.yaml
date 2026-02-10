@@ -17,7 +17,7 @@ spec:
         runAsUser: 1000
       containers:
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:26ba92f5eb1bc441d8d711ba5e553765c5606cb7
+        image: ghcr.io/jaimindevops/go-app:fa7f49c90799f65a4c05123c63a9fbafc54c3a2e
         ports:
         - containerPort: 8080
         env:                     # Added your Redis Env
