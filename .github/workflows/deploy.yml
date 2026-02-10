@@ -61,6 +61,15 @@ jobs:
         run: |
           git config --global user.email "ci-bot@argocd.com"
           git config --global user.name "CI/CD Bot"
+
+          # Stage the change
           git add go-deployment.yaml
+
+          # Commit it locally
           git commit -m "chore: update image to ghcr.io version ${{ github.sha }}"
-          git push
+
+          # 🚨 THE FIX: Pull the latest state from GitHub and rebase our change on top
+          git pull --rebase origin main
+
+          # Now push safely
+          git push origin main
