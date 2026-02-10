@@ -18,7 +18,7 @@ spec:
         runAsUser: 1000
       containers:
       - name: go-app
-        image: jaiminops18/go-app:56ef8e595f8a66be1ea7ef1f77b72d5c938f8b95
+        image: jaiminops18/go-app:d5ea9f7749e870d13f5a004fc077437127cd6571
         ports:
         - containerPort: 8080
         securityContext:
