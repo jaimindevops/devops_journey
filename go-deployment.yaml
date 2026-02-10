@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-app
+  name: go-service
+  labels:
+    app: go-app
 spec:
   replicas: 1
   selector:
@@ -12,36 +14,18 @@ spec:
       labels:
         app: go-app
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
-      # 1. Main Application
+      # 1. The Main Application
       - name: go-app
-        image: ghcr.io/jaimindevops/go-app:e440513
+        # This is the line the pipeline will automatically update
+        image: ghcr.io/jaimindevops/go-app:latest
         ports:
         - containerPort: 8080
         env:
-        - name: REDIS_URL
-          value: "redis-service:6379"
-        securityContext:
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "64Mi"
-          limits:
-            cpu: "200m"
-            memory: "128Mi"
-
-      # 2. Sidecar (CORRECT IMAGE: Alpine)
+        - name: REDIS_HOST
+          value: "redis-service"
+        
+      # 2. The Sidecar (For Debugging)
       - name: sidecar
-        image: public.ecr.aws/docker/library/alpine:latest
+        image: alpine
         command: ["/bin/sh", "-c", "sleep 3600"]
-        securityContext:
-          runAsNonRoot: false
-          runAsUser: 0

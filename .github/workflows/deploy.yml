@@ -1,0 +1,66 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write  # Required to push to ghcr.io
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Login to GitHub Container Registry
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and Push Docker Image
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # Tags the image with the specific commit SHA
+          tags: ghcr.io/${{ github.repository_owner }}/go-app:${{ github.sha }}
+
+  update-manifest:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }} # Uses your Personal Access Token to push back
+
+      - name: Update Kubernetes Manifest
+        run: |
+          # Convert username to lowercase for Docker image standards
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          
+          # 🚨 SAFE SED REPLACEMENT 🚨
+          # This command only finds the line containing "go-app" and updates it.
+          # It effectively ignores the "alpine" sidecar line.
+          sed -i "s|image: .*go-app.*|image: ghcr.io/$OWNER_LC/go-app:${{ github.sha }}|g" go-deployment.yaml
+          
+          # Verify the change (print to logs)
+          cat go-deployment.yaml
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "ci-bot@argocd.com"
+          git config --global user.name "CI/CD Bot"
+          git add go-deployment.yaml
+          git commit -m "chore: update image to ghcr.io version ${{ github.sha }}"
+          git push
