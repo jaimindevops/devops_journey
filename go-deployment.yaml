@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: go-service
-  labels:
-    app: go-app
 spec:
   replicas: 1
   selector:
@@ -15,17 +13,14 @@ spec:
         app: go-app
     spec:
       containers:
-      # 1. The Main Application
       - name: go-app
-        # This is the line the pipeline will automatically update
         image: ghcr.io/jaimindevops/go-app:latest
+        resources:
+          requests:
+            cpu: "100m"     # 🚨 THIS FIXES THE HPA ERROR
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
         ports:
         - containerPort: 8080
-        env:
-        - name: REDIS_HOST
-          value: "redis-service"
-        
-      # 2. The Sidecar (For Debugging)
-      - name: sidecar
-        image: alpine
-        command: ["/bin/sh", "-c", "sleep 3600"]
